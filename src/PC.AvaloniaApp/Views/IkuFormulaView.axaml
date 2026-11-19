@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MinePerform.PC.ViewModels"
+             x:Class="MinePerform.PC.Views.IkuFormulaView"
+             x:DataType="vm:IkuFormulaPageViewModel">
+
+  <Grid Margin="24,16" ColumnDefinitions="300,*">
+
+    <!-- LEFT: Unlimited Kemenkeu IKU Portfolio List (1a-N, 1b-N, 1c-N, + Custom) -->
+    <Border Grid.Column="0" Classes="BentoCard" Margin="0,0,16,0">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+          <TextBlock Text="DAFTAR IKU TAHUN AKTIF" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Content="+ Tambah IKU" Command="{Binding AddCustomIkuCommand}" Padding="8,4" CornerRadius="6" FontSize="12" />
+        </Grid>
+
+        <ListBox ItemsSource="{Binding IkuCards}"
+                 SelectedItem="{Binding SelectedIku}"
+                 Background="Transparent">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:IkuCardItem">
+              <Border Classes="IkuCard" Margin="0,0,0,8">
+                <StackPanel Spacing="4">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding Code}" FontSize="14" FontWeight="Bold" Foreground="#38BDF8" />
+                    <Border Grid.Column="1" Background="#064E3B40" BorderBrush="#10B981" BorderThickness="1" CornerRadius="4" Padding="6,2">
+                      <TextBlock Text="{Binding ScoreBadge}" FontSize="12" FontWeight="SemiBold" Foreground="#10B981" />
+                    </Border>
+                  </Grid>
+                  <TextBlock Text="{Binding Title}" FontSize="12" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Title}" />
+                  <TextBlock Text="{Binding TargetLabel}" FontSize="11" Foreground="#94A3B8" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Border>
+
+    <!-- RIGHT: Modular 120 FPS Lego-Token Builder Canvas (Zero-Collision WrapPanel) -->
+    <Border Grid.Column="1" Classes="BentoCard">
+      <DockPanel>
+        <!-- Header -->
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,16">
+          <TextBlock Text="{Binding SelectedIku.Code, StringFormat='KANVAS PERAKIT RUMUS LEGO-TOKEN: [ IKU {0} ]'}"
+                     FontSize="16"
+                     FontWeight="Bold" />
+          <TextBlock Text="{Binding SelectedIku.TargetLabel}" FontSize="12" Foreground="#94A3B8" />
+        </StackPanel>
+
+        <!-- Bottom: Row-Level Audit Preview & Actions -->
+        <StackPanel DockPanel.Dock="Bottom" Spacing="12" Margin="0,16,0,0">
+          <WrapPanel Orientation="Horizontal">
+            <Button Content="⚡ Uji Hitung" Command="{Binding TestEvaluateSelectedIkuCommand}" Padding="12,6" CornerRadius="6" Margin="0,0,8,4" />
+            <Button Content="🧹 Bersihkan Kanvas" Command="{Binding ClearCanvasCommand}" Padding="12,6" CornerRadius="6" Margin="0,0,8,4" />
+            <TextBlock Text="{Binding TestResultText}" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="#10B981" Margin="8,0,0,4" />
+          </WrapPanel>
+
+          <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="8" Padding="12,8">
+            <TextBlock Text="{Binding AuditSummaryText}" FontSize="12" Foreground="#CBD5E1" />
+          </Border>
+        </StackPanel>
+
+        <!-- Middle: Token Palette + Formula WrapPanel Box -->
+        <ScrollViewer>
+          <StackPanel Spacing="16">
+            <!-- 1. Token Palette -->
+            <StackPanel Spacing="8">
+              <TextBlock Text="1. PALET TOKEN (Klik untuk Sematkan di Kanvas):" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+              <ItemsControl ItemsSource="{Binding PaletteTokens}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:LegoTokenChipItem">
+                    <Button Classes="TokenChip"
+                            Command="{Binding $parent[UserControl].((vm:IkuFormulaPageViewModel)DataContext).PinTokenToCanvasCommand}"
+                            CommandParameter="{Binding}"
+                            Margin="0,0,6,6">
+                      <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="{Binding Icon}" />
+                        <TextBlock Text="{Binding Label}" />
+                      </StackPanel>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+
+            <!-- 2. Formula Box (WrapPanel — Zero Collision) -->
+            <StackPanel Spacing="8">
+              <TextBlock Text="2. KOTAK FORMULA UTAMA (Klik Chip untuk Melepas):" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+              <Border Background="#0F172A" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="8" Padding="16" MinHeight="120">
+                <ItemsControl ItemsSource="{Binding CanvasTokens}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:LegoTokenChipItem">
+                      <Button Classes="TokenChip"
+                              Command="{Binding $parent[UserControl].((vm:IkuFormulaPageViewModel)DataContext).RemoveCanvasTokenCommand}"
+                              CommandParameter="{Binding}"
+                              Margin="0,0,6,6">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                          <TextBlock Text="{Binding Icon}" />
+                          <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                        </StackPanel>
+                      </Button>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
+
+  </Grid>
+</UserControl>

@@ -1,0 +1,144 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MinePerform.PC.ViewModels"
+             xmlns:lego="using:MinePerform.Core.LegoTokenEngine"
+             x:Class="MinePerform.PC.Views.ChartSummaryView"
+             x:DataType="vm:ChartSummaryPageViewModel">
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="16" Margin="16">
+
+      <!-- Header & Period Filter Bar -->
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Grid.Column="0" Spacing="4">
+          <TextBlock Text="Chart &amp; Summary — Dashboard Bento-Grid"
+                     FontSize="20" FontWeight="SemiBold" Foreground="#F8FAFC" />
+          <TextBlock Text="Ringkasan NKP, Volume IP, Temuan, Kurang Bayar, Premi Insentif, dan Pareto TPS / Keterlambatan."
+                     FontSize="12" Foreground="#94A3B8" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <Button Classes="GroupPill" Content="Bulanan"
+                  Background="#1E293B" BorderBrush="#334155" Foreground="#E2E8F0"
+                  Command="{Binding SelectPeriodCommand}" CommandParameter="Bulanan" />
+          <Button Classes="GroupPill" Content="Triwulanan"
+                  Background="#1E293B" BorderBrush="#334155" Foreground="#E2E8F0"
+                  Command="{Binding SelectPeriodCommand}" CommandParameter="Triwulanan" />
+          <Button Classes="GroupPill" Content="Semesteran"
+                  Background="#1E293B" BorderBrush="#334155" Foreground="#E2E8F0"
+                  Command="{Binding SelectPeriodCommand}" CommandParameter="Semesteran" />
+          <Button Classes="GroupPill" Content="Tahunan"
+                  Background="#1E3A8A" BorderBrush="#3B82F6" Foreground="#F8FAFC"
+                  Command="{Binding SelectPeriodCommand}" CommandParameter="Tahunan" />
+        </StackPanel>
+      </Grid>
+
+      <!-- Row 1: 4-Column Bento KPI Cards -->
+      <Grid ColumnDefinitions="*,*,*,*">
+        <Border Grid.Column="0" Classes="BentoCard" Margin="0,0,8,0">
+          <StackPanel Spacing="8">
+            <TextBlock Text="NILAI KINERJA PEGAWAI (NKP)" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+            <TextBlock Text="{Binding NkpText}" FontSize="28" FontWeight="Bold" Foreground="#10B981" />
+            <TextBlock Text="Konsolidasi Bobot IKU Aktif" FontSize="12" Foreground="#64748B" />
+          </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Classes="BentoCard" Margin="8,0">
+          <StackPanel Spacing="8">
+            <TextBlock Text="VOLUME IP &amp; TEMUAN" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+            <TextBlock Text="{Binding TotalDocsText}" FontSize="20" FontWeight="Bold" Foreground="#3B82F6" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding FclLclText}" FontSize="12" Foreground="#CBD5E1" />
+          </StackPanel>
+        </Border>
+
+        <Border Grid.Column="2" Classes="BentoCard" Margin="8,0">
+          <StackPanel Spacing="8">
+            <TextBlock Text="NOTUL &amp; KURANG BAYAR" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+            <TextBlock Text="{Binding KurangBayarText}" FontSize="20" FontWeight="Bold" Foreground="#F59E0B" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding NotulText}" FontSize="12" Foreground="#CBD5E1" />
+          </StackPanel>
+        </Border>
+
+        <Border Grid.Column="3" Classes="BentoCard" Margin="8,0,0,0">
+          <StackPanel Spacing="8">
+            <TextBlock Text="PREMI INSENTIF &amp; RUN-RATE" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+            <TextBlock Text="{Binding PremiRunRateText}" FontSize="20" FontWeight="Bold" Foreground="#8B5CF6" />
+            <TextBlock Text="{Binding PremiCategoryText}" FontSize="12" Foreground="#CBD5E1" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Row 2: TPS Distribution & Delay Pareto Charts -->
+      <Grid ColumnDefinitions="*,*">
+        <!-- TPS Distribution -->
+        <Border Grid.Column="0" Classes="BentoCard" Margin="0,0,8,0">
+          <StackPanel Spacing="12">
+            <TextBlock Text="Distribusi Pemeriksaan per TPS" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+            <ItemsControl ItemsSource="{Binding TpsDistribution}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:BarChartRowItem">
+                  <Grid ColumnDefinitions="120,*,48" Margin="0,4">
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontSize="12" Foreground="#E2E8F0"
+                               TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ProgressBar Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding WidthRatio}"
+                                 Height="12" Foreground="#3B82F6" Background="#0F172A" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding Count}" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#94A3B8" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+
+        <!-- Delay Reasons Pareto -->
+        <Border Grid.Column="1" Classes="BentoCard" Margin="8,0,0,0">
+          <StackPanel Spacing="12">
+            <TextBlock Text="Pareto Alasan Mulai &gt; 1 Jam" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+            <ItemsControl ItemsSource="{Binding DelayReasons}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:BarChartRowItem">
+                  <Grid ColumnDefinitions="160,*,48" Margin="0,4">
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontSize="12" Foreground="#E2E8F0"
+                               TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ProgressBar Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding WidthRatio}"
+                                 Height="12" Foreground="#F59E0B" Background="#0F172A" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding Count}" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#94A3B8" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Row 3: Monthly Trend Strip -->
+      <Border Classes="BentoCard">
+        <StackPanel Spacing="12">
+          <TextBlock Text="Tren Volume Pemeriksaan &amp; Temuan Bulanan" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+          <ItemsControl ItemsSource="{Binding MonthlyTrend}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="lego:MonthlyTrendPoint">
+                <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1"
+                        CornerRadius="8" Padding="12,8" Margin="0,0,8,8" MinWidth="120">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding Label}" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+                    <TextBlock Text="{Binding DocumentCount, StringFormat='{}{0} IP'}" FontSize="16" FontWeight="Bold" Foreground="#3B82F6" />
+                    <TextBlock Text="{Binding FindingsCount, StringFormat='Temuan: {0}'}" FontSize="12" Foreground="#10B981" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

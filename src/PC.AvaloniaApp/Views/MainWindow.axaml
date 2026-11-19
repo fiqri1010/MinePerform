@@ -1,0 +1,203 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MinePerform.PC.ViewModels"
+        xmlns:views="using:MinePerform.PC.Views"
+        xmlns:schema="using:MinePerform.Core.SchemaStudio"
+        x:Class="MinePerform.PC.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="MinePerform — Adaptive KPI/IKU Portfolio &amp; No-Code SQLite Studio"
+        Width="1366"
+        Height="840"
+        MinWidth="960"
+        MinHeight="640"
+        Background="#0F172A"
+        Foreground="#F8FAFC">
+
+  <DockPanel LastChildFill="True">
+
+    <!-- ==================== TOP GLOBAL APP BAR (52px, 8pt Grid) ==================== -->
+    <Border DockPanel.Dock="Top"
+            Background="#1E293B"
+            BorderBrush="#334155"
+            BorderThickness="0,0,0,1"
+            Padding="16,8">
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+        <!-- Collapse Nav Toggle + Workspace Switcher -->
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" Margin="0,0,12,0">
+          <Button Content="≡"
+                  Command="{Binding ToggleNavRailCommand}"
+                  Padding="8,4"
+                  CornerRadius="6"
+                  ToolTip.Tip="Buka / Lipat Navigasi (220px / 56px)" />
+          <TextBlock Text="WORKSPACE:"
+                     VerticalAlignment="Center"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#94A3B8" />
+          <ComboBox ItemsSource="{Binding Workspaces}"
+                    SelectedItem="{Binding ActiveWorkspace}"
+                    MinWidth="144">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="schema:WorkspaceModel">
+                <TextBlock Text="{Binding DisplayName}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button Content="+ Salin Tahun"
+                  Command="{Binding CloneToNextYearCommand}"
+                  Padding="12,4"
+                  CornerRadius="6"
+                  ToolTip.Tip="Selective Year-to-Year Blueprint Cloner (salin kerangka tanpa data lama)" />
+        </StackPanel>
+
+        <!-- Notification Pill -->
+        <TextBlock Grid.Column="1"
+                   Text="{Binding BannerNotification}"
+                   VerticalAlignment="Center"
+                   FontSize="12"
+                   Foreground="#10B981"
+                   TextTrimming="CharacterEllipsis"
+                   MaxWidth="320"
+                   Margin="0,0,12,0" />
+
+        <!-- Global Ctrl+K Search -->
+        <TextBox Grid.Column="2"
+                 Text="{Binding GlobalSearchQuery}"
+                 Watermark="🔍 Cari No. IP / Importir / TPS (Ctrl+K)..."
+                 MaxWidth="360"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Center"
+                 Margin="0,0,12,0" />
+
+        <!-- Google Hybrid Sync Pill -->
+        <Border Grid.Column="3"
+                Background="#064E3B40"
+                BorderBrush="#10B981"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12,4"
+                VerticalAlignment="Center">
+          <TextBlock Text="{Binding GoogleAccountStatus}"
+                     FontSize="12"
+                     Foreground="#10B981"
+                     FontWeight="SemiBold" />
+        </Border>
+      </Grid>
+    </Border>
+
+    <!-- ==================== BOTTOM TELEMETRY STATUS BAR (28px) ==================== -->
+    <Border DockPanel.Dock="Bottom"
+            Height="28"
+            Background="#0B1120"
+            BorderBrush="#334155"
+            BorderThickness="0,1,0,0"
+            Padding="16,0">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <TextBlock Grid.Column="0"
+                   Text="{Binding RamTelemetryText}"
+                   VerticalAlignment="Center"
+                   FontSize="11"
+                   Foreground="#38BDF8"
+                   Margin="0,0,16,0" />
+        <TextBlock Grid.Column="1"
+                   Text="🔌 SIAP-NEO: Siap  |  📁 OneDrive: Siap (Zero-Copy)  |  ☁️ Firebase Spark: Aktif"
+                   VerticalAlignment="Center"
+                   FontSize="11"
+                   Foreground="#94A3B8"
+                   TextTrimming="CharacterEllipsis"
+                   Margin="0,0,16,0" />
+        <TextBlock Grid.Column="2"
+                   Text="MinePerform Native AOT v1.0"
+                   VerticalAlignment="Center"
+                   FontSize="11"
+                   Foreground="#64748B" />
+      </Grid>
+    </Border>
+
+    <!-- ==================== LEFT NAVIGATION RAIL (220px / 56px) ==================== -->
+    <Border DockPanel.Dock="Left"
+            Width="{Binding NavRailWidth}"
+            Background="#111827"
+            BorderBrush="#334155"
+            BorderThickness="0,0,1,0"
+            Padding="8,16">
+      <StackPanel Spacing="8">
+        <Button Classes="NavRailBtn" Command="{Binding SelectNavCommand}" CommandParameter="0" ToolTip.Tip="Chart &amp; Summary">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="📊" />
+            <TextBlock Text="Ringkasan" IsVisible="{Binding IsNavExpanded}" />
+          </StackPanel>
+        </Button>
+
+        <Button Classes="NavRailBtn" Command="{Binding SelectNavCommand}" CommandParameter="1" ToolTip.Tip="Data Tabel (No-Code SQLite Studio)">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="🗂️" />
+            <TextBlock Text="Data Tabel" IsVisible="{Binding IsNavExpanded}" />
+          </StackPanel>
+        </Button>
+
+        <Button Classes="NavRailBtn" Command="{Binding SelectNavCommand}" CommandParameter="2" ToolTip.Tip="IKU &amp; Formula Lego-Token">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="🧩" />
+            <TextBlock Text="IKU &amp; Formula" IsVisible="{Binding IsNavExpanded}" />
+          </StackPanel>
+        </Button>
+
+        <Button Classes="NavRailBtn" Command="{Binding SelectNavCommand}" CommandParameter="3" ToolTip.Tip="Konektor SIAP-NEO, BOT &amp; OneDrive 5GB+">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="🤖" />
+            <TextBlock Text="Konektor &amp; OD" IsVisible="{Binding IsNavExpanded}" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </Border>
+
+    <!-- ==================== RIGHT CONTEXTUAL INSPECTOR (320px) ==================== -->
+    <Border DockPanel.Dock="Right"
+            Width="320"
+            IsVisible="{Binding IsInspectorOpen}"
+            Background="#111827"
+            BorderBrush="#334155"
+            BorderThickness="1,0,0,0"
+            Padding="16">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+          <TextBlock Text="Inspektor Baris" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Content="✕" Command="{Binding CloseInspectorCommand}" Padding="8,4" CornerRadius="6" />
+        </Grid>
+
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding InspectorFields}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:InspectorFieldItem">
+                <Border Background="#1E293B"
+                        BorderBrush="#334155"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12,8"
+                        Margin="0,0,0,8">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding Key}" FontSize="11" Foreground="#94A3B8" />
+                    <TextBlock Text="{Binding Value}"
+                               FontSize="12"
+                               TextWrapping="Wrap"
+                               Foreground="#F8FAFC" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
+
+    <!-- ==================== MAIN STAGE (DYNAMIC 4 ANNUAL PAGES) ==================== -->
+    <Grid MinWidth="640" Background="#0F172A">
+      <views:ChartSummaryView DataContext="{Binding ChartPage}" IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsChartPageActive}" />
+      <views:DataTableView DataContext="{Binding DataPage}" IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsDataPageActive}" />
+      <views:IkuFormulaView DataContext="{Binding IkuPage}" IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsIkuPageActive}" />
+      <views:ConnectorsOneDriveView DataContext="{Binding ConnectorsPage}" IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsConnectorsPageActive}" />
+    </Grid>
+
+  </DockPanel>
+</Window>

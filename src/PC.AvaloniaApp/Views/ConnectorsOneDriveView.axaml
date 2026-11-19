@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MinePerform.PC.ViewModels"
+             x:Class="MinePerform.PC.Views.ConnectorsOneDriveView"
+             x:DataType="vm:ConnectorsOneDrivePageViewModel">
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="16" Margin="16">
+
+      <!-- Page Header -->
+      <StackPanel Spacing="4">
+        <TextBlock Text="Konektor Lokal &amp; OneDrive 5 GB+ Zero-Copy Photo Sorter"
+                   FontSize="20" FontWeight="SemiBold" Foreground="#F8FAFC" />
+        <TextBlock Text="Jembatan SIAP-NEO, BOT-MONITOR-PERIKSA, pengelompokan foto Zero-Copy MoveFileExW, dan Online SQLite Backup."
+                   FontSize="12" Foreground="#94A3B8" />
+      </StackPanel>
+
+      <!-- Row 1: SIAP-NEO & BOT-MONITOR-PERIKSA Cards -->
+      <Grid ColumnDefinitions="*,*">
+        <Border Grid.Column="0" Classes="BentoCard" Margin="0,0,8,0">
+          <StackPanel Spacing="8">
+            <TextBlock Text="🔌 SIAP-NEO Desktop Connector" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+            <TextBlock Text="{Binding SiapNeoStatus}" FontSize="12" Foreground="#10B981" TextWrapping="Wrap" />
+            <TextBlock Text="Mendukung IPC lokal, pembacaan SQLite read-only, dan Humanized Input Macro (kurva Bezier &amp; jeda Gaussian)."
+                       FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Classes="BentoCard" Margin="8,0,0,0">
+          <StackPanel Spacing="8">
+            <TextBlock Text="🤖 BOT-MONITOR-PERIKSA Connector" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+            <TextBlock Text="{Binding BotMonitorStatus}" FontSize="12" Foreground="#10B981" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding BotMode, StringFormat='Mode Aktif: {0} (Pemantauan folder unduhan PIB/IP/LHP PDF &amp; auto-ingest)'}"
+                       FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Row 2: OneDrive 5GB+ Zero-Copy Photo Sorter -->
+      <Border Classes="BentoCard">
+        <StackPanel Spacing="12">
+          <TextBlock Text="☁️ OneDrive 5 GB+ Zero-Copy Photo Sorter" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+
+          <Grid ColumnDefinitions="180,*" RowDefinitions="Auto,Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Folder Sumber Foto:" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="0,0,12,8" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SourcePhotosDir}" Watermark="Path folder sumber foto pemeriksaan..." Margin="0,0,0,8" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Folder Tujuan OneDrive:" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="0,0,12,8" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding OneDriveYearDir}" Watermark="Path folder tahunan OneDrive..." Margin="0,0,0,8" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Pola Nama Folder:" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="0,0,12,0" />
+            <Border Grid.Row="2" Grid.Column="1" Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="12,8">
+              <TextBlock Text="{Binding FolderPatternPreview}" FontSize="12" FontFamily="Consolas, monospace" Foreground="#38BDF8" TextWrapping="Wrap" />
+            </Border>
+          </Grid>
+
+          <!-- Progress & Status -->
+          <ProgressBar Minimum="0" Maximum="100" Value="{Binding SortProgressPercent}" Height="8" Foreground="#10B981" Background="#0F172A" />
+          <TextBlock Text="{Binding SortStatusLog}" FontSize="12" Foreground="#E2E8F0" TextWrapping="Wrap" />
+
+          <!-- Action Buttons -->
+          <WrapPanel Orientation="Horizontal">
+            <Button Content="🔍 Dry-Run Simulasi" Margin="0,0,8,8" Padding="12,8" CornerRadius="6"
+                    Background="#1E3A8A" Foreground="#F8FAFC"
+                    Command="{Binding RunPhotoSortCommand}">
+              <Button.CommandParameter>
+                <x:Boolean>True</x:Boolean>
+              </Button.CommandParameter>
+            </Button>
+
+            <Button Content="⚡ Eksekusi Pindah (Zero-Copy)" Margin="0,0,8,8" Padding="12,8" CornerRadius="6"
+                    Background="#065F46" Foreground="#F8FAFC"
+                    Command="{Binding RunPhotoSortCommand}">
+              <Button.CommandParameter>
+                <x:Boolean>False</x:Boolean>
+              </Button.CommandParameter>
+            </Button>
+
+            <Button Content="↩️ Undo Batch Terakhir" Margin="0,0,8,8" Padding="12,8" CornerRadius="6"
+                    Background="#78350F" Foreground="#F8FAFC"
+                    Command="{Binding UndoLastBatchCommand}" />
+
+            <Button Content="💾 Backup SQLite ke OneDrive (.gz)" Margin="0,0,8,8" Padding="12,8" CornerRadius="6"
+                    Background="#334155" Foreground="#F8FAFC"
+                    Command="{Binding RunOneDriveSqliteBackupCommand}" />
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
