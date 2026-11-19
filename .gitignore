@@ -43,6 +43,7 @@ artifacts/
 *.userosscache
 *.sln.docstates
 .vs/
+.avalonia-build-tasks/
 TestResults/
 BenchmarkDotNet.Artifacts/
 
