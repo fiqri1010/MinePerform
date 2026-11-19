@@ -1,0 +1,70 @@
+# ==============================================================================
+# MinePerform — .gitignore
+# Protects secrets, live customs inspection documents, SQLite databases,
+# and .NET / Android build artifacts.
+# ==============================================================================
+
+# --- Secrets & Local Configuration ---
+.env
+.env.local
+.env.*.local
+.claude/settings.local.json
+secrets/
+*serviceAccountKey*.json
+*firebase-adminsdk*.json
+google-services.json
+local.properties
+
+# --- Live Local Databases & User Operational Data (PII / Customs Data Guard) ---
+data/*.sqlite
+data/*.sqlite-wal
+data/*.sqlite-shm
+data/*.db
+data/*.db-wal
+data/*.db-shm
+docs/references/*.xlsx
+docs/references/*.xls
+docs/references/*.csv
+docs/references/*.docx
+docs/references/*.pdf
+docs/references/*.jpg
+docs/references/*.jpeg
+docs/references/*.png
+Data IP 2026.xlsx
+Manual IKU 2026.docx
+
+# --- .NET / Avalonia Native AOT Build Artifacts ---
+bin/
+obj/
+publish/
+artifacts/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+TestResults/
+BenchmarkDotNet.Artifacts/
+
+# --- Android / Kotlin / Gradle Build Artifacts ---
+android/.gradle/
+android/build/
+android/*/build/
+android/captures/
+android/.cxx/
+android/.idea/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.keystore
+*.jks
+
+# --- Node / Python / OS Junk ---
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

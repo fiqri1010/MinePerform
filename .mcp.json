@@ -1,0 +1,124 @@
+{
+  "mcpServers": {
+    "figma-context-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--stdio"
+      ],
+      "env": {
+        "FIGMA_API_KEY": "${FIGMA_API_KEY}"
+      }
+    },
+    "talk-to-figma-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "cursor-talk-to-figma-mcp"
+      ]
+    },
+    "penpot-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "penpot-mcp"
+      ],
+      "env": {
+        "PENPOT_API_URL": "${PENPOT_API_URL:-https://design.penpot.app}",
+        "PENPOT_ACCESS_TOKEN": "${PENPOT_ACCESS_TOKEN}"
+      }
+    },
+    "sqlite": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-sqlite",
+        "--db-path",
+        "./data/mineperform.sqlite"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ]
+    },
+    "git": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "."
+      ]
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "markitdown": {
+      "command": "uvx",
+      "args": [
+        "--prerelease=allow",
+        "markitdown-mcp"
+      ]
+    },
+    "roslyn-mcp": {
+      "command": "dotnet-roslyn-mcp",
+      "args": []
+    },
+    "firebase-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@gannonh/firebase-mcp"
+      ],
+      "env": {
+        "SERVICE_ACCOUNT_KEY_PATH": "${FIREBASE_SERVICE_ACCOUNT_KEY_PATH}",
+        "FIREBASE_STORAGE_BUCKET": "${FIREBASE_STORAGE_BUCKET}"
+      }
+    },
+    "windows-mcp": {
+      "command": "uvx",
+      "args": [
+        "windows-mcp",
+        "serve"
+      ]
+    },
+    "adb-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "adb-mcp"
+      ]
+    }
+  }
+}
