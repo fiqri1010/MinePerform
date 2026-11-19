@@ -90,7 +90,11 @@ function auditCSharp(content, relPath) {
   if (/\bDllImport\s*\(/.test(content)) {
     issues.push(`[AOT-CS] ${relPath}: Prefer [LibraryImport] (source-generated P/Invoke) over legacy [DllImport] for Native AOT.`);
   }
-  if (/(^|[^\w.])dynamic\s+[A-Za-z_]/.test(content)) {
+  const codeOnly = content
+    .split(/\r?\n/)
+    .filter((l) => !l.trim().startsWith("//") && !l.trim().startsWith("*"))
+    .join("\n");
+  if (/(^|[^\w.])dynamic\s+[A-Za-z_]/.test(codeOnly)) {
     issues.push(`[AOT-CS] ${relPath}: C# 'dynamic' relies on runtime DLR reflection and is forbidden in Native AOT.`);
   }
 
