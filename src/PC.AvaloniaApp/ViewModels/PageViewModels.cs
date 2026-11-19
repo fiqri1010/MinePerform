@@ -183,9 +183,15 @@ public sealed partial class DataTablePageViewModel : ObservableObject
             SelectedRowDetails.Add(new RowDetailDisplayItem(d.DetailKind.ToUpperInvariant(), d.DetailKind, d.PayloadJson));
         }
 
-        if (SelectedRowDetails.Count == 0 && !string.IsNullOrWhiteSpace(value.NamaFolderOnedrive))
+        if (SelectedRowDetails.Count == 0)
         {
-            SelectedRowDetails.Add(new RowDetailDisplayItem("ONEDRIVE", value.NamaFolderOnedrive, "Subfolder otomatis: /Berkas/ & /Foto/"));
+            SelectedRowDetails.Add(new RowDetailDisplayItem("DOKUMEN", $"IP {value.NoIp} ({value.TanggalIp})", $"Importir: {value.Importir} • TPS: {value.Tps} • Jalur: {value.FclLcl}"));
+            SelectedRowDetails.Add(new RowDetailDisplayItem("PEMERIKSAAN", $"TK: {value.TkPeriksa} • PKB: {value.WaktuPkb}", $"Mulai: {value.WaktuMulai} -> Selesai: {value.SelesaiPeriksa}"));
+            SelectedRowDetails.Add(new RowDetailDisplayItem("PUTUSAN", $"Temuan: {value.Temuan} • Notul: {value.Notul}", $"Total PDRI: {value.TotalPdri} • Kurang Bayar: {value.TotalKurangBayar}"));
+            if (!string.IsNullOrWhiteSpace(value.NamaFolderOnedrive))
+            {
+                SelectedRowDetails.Add(new RowDetailDisplayItem("ONEDRIVE", value.NamaFolderOnedrive, "Subfolder target: /Berkas/ & /Foto/"));
+            }
         }
     }
 
@@ -258,6 +264,7 @@ public sealed partial class DataTablePageViewModel : ObservableObject
         TotalRowCount = (int)_studio.CountRows(table);
         AnomalyCount = anomalies.Count;
         StatusMessage = $"Tabel {table.DisplayName}: {TotalRowCount} baris | {cols.Count} kolom | {AnomalyCount} anomali terdeteksi";
+        SelectedRow = Rows.FirstOrDefault();
     }
 
     [RelayCommand]

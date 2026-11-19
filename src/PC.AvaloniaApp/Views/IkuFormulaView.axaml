@@ -4,14 +4,22 @@
              x:Class="MinePerform.PC.Views.IkuFormulaView"
              x:DataType="vm:IkuFormulaPageViewModel">
 
-  <Grid Margin="24,16" ColumnDefinitions="300,*">
+  <Grid Margin="24,16" ColumnDefinitions="320,*">
 
-    <!-- LEFT: Unlimited Kemenkeu IKU Portfolio List (1a-N, 1b-N, 1c-N, + Custom) -->
+    <!-- LEFT: Portofolio IKU Kemenkeu (1a-N, 1b-N, 1c-N, + Custom) -->
     <Border Grid.Column="0" Classes="BentoCard" Margin="0,0,16,0">
       <DockPanel>
-        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
-          <TextBlock Text="DAFTAR IKU TAHUN AKTIF" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
-          <Button Grid.Column="1" Content="+ Tambah IKU" Command="{Binding AddCustomIkuCommand}" Padding="8,4" CornerRadius="6" FontSize="12" />
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <PathIcon Data="{StaticResource IconFormula}" Width="14" Height="14" Foreground="#38BDF8" VerticalAlignment="Center" />
+            <TextBlock Text="PORTOFOLIO IKU 2026" FontSize="12" FontWeight="Bold" Foreground="#F8FAFC" VerticalAlignment="Center" />
+          </StackPanel>
+          <Button Grid.Column="1" Classes="PrimaryAction" Command="{Binding AddCustomIkuCommand}" Padding="12,6" FontSize="11">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <PathIcon Data="{StaticResource IconPlus}" Width="10" Height="10" Foreground="#FFFFFF" />
+              <TextBlock Text="Tambah IKU" />
+            </StackPanel>
+          </Button>
         </Grid>
 
         <ListBox ItemsSource="{Binding IkuCards}"
@@ -19,16 +27,16 @@
                  Background="Transparent">
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="vm:IkuCardItem">
-              <Border Classes="IkuCard" Margin="0,0,0,8">
-                <StackPanel Spacing="4">
+              <Border Classes="SubtleCard" Margin="0,0,0,8" Padding="12">
+                <StackPanel Spacing="6">
                   <Grid ColumnDefinitions="*,Auto">
                     <TextBlock Text="{Binding Code}" FontSize="14" FontWeight="Bold" Foreground="#38BDF8" />
-                    <Border Grid.Column="1" Background="#064E3B40" BorderBrush="#10B981" BorderThickness="1" CornerRadius="4" Padding="6,2">
-                      <TextBlock Text="{Binding ScoreBadge}" FontSize="12" FontWeight="SemiBold" Foreground="#10B981" />
+                    <Border Grid.Column="1" Background="#064E3B40" BorderBrush="#10B981" BorderThickness="1" CornerRadius="6" Padding="8,2">
+                      <TextBlock Text="{Binding ScoreBadge}" FontSize="12" FontWeight="Bold" Foreground="#10B981" />
                     </Border>
                   </Grid>
-                  <TextBlock Text="{Binding Title}" FontSize="12" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Title}" />
-                  <TextBlock Text="{Binding TargetLabel}" FontSize="11" Foreground="#94A3B8" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="Medium" Foreground="#F8FAFC" TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding TargetLabel}" FontSize="11" Foreground="#64748B" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
               </Border>
             </DataTemplate>
@@ -37,27 +45,43 @@
       </DockPanel>
     </Border>
 
-    <!-- RIGHT: Modular 120 FPS Lego-Token Builder Canvas (Zero-Collision WrapPanel) -->
+    <!-- RIGHT: Modular 120 FPS Lego-Token Builder Canvas -->
     <Border Grid.Column="1" Classes="BentoCard">
       <DockPanel>
         <!-- Header -->
-        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,16">
-          <TextBlock Text="{Binding SelectedIku.Code, StringFormat='KANVAS PERAKIT RUMUS LEGO-TOKEN: [ IKU {0} ]'}"
-                     FontSize="16"
-                     FontWeight="Bold" />
-          <TextBlock Text="{Binding SelectedIku.TargetLabel}" FontSize="12" Foreground="#94A3B8" />
+        <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,16">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding SelectedIku.Code, StringFormat='KANVAS PERAKIT RUMUS LEGO-TOKEN: [ {0} ]'}"
+                         FontSize="16"
+                         FontWeight="Bold"
+                         Foreground="#F8FAFC" />
+              <TextBlock Text="{Binding SelectedIku.TargetLabel}" FontSize="12" Foreground="#94A3B8" />
+            </StackPanel>
+            <Border Grid.Column="1" Background="#162032" CornerRadius="6" Padding="8,4" VerticalAlignment="Center">
+              <TextBlock Text="Zero Hardcoded Formulas" FontSize="10" FontWeight="Bold" Foreground="#38BDF8" />
+            </Border>
+          </Grid>
         </StackPanel>
 
         <!-- Bottom: Row-Level Audit Preview & Actions -->
         <StackPanel DockPanel.Dock="Bottom" Spacing="12" Margin="0,16,0,0">
-          <WrapPanel Orientation="Horizontal">
-            <Button Content="⚡ Uji Hitung" Command="{Binding TestEvaluateSelectedIkuCommand}" Padding="12,6" CornerRadius="6" Margin="0,0,8,4" />
-            <Button Content="🧹 Bersihkan Kanvas" Command="{Binding ClearCanvasCommand}" Padding="12,6" CornerRadius="6" Margin="0,0,8,4" />
-            <TextBlock Text="{Binding TestResultText}" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="#10B981" Margin="8,0,0,4" />
-          </WrapPanel>
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+              <Button Classes="PrimaryAction" Command="{Binding TestEvaluateSelectedIkuCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <PathIcon Data="{StaticResource IconSparkles}" Width="12" Height="12" Foreground="#FFFFFF" />
+                  <TextBlock Text="Uji Hitung Capaian" FontSize="12" />
+                </StackPanel>
+              </Button>
+              <Button Classes="SecondaryAction" Content="Bersihkan Kanvas" Command="{Binding ClearCanvasCommand}" FontSize="12" />
+            </StackPanel>
 
-          <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="8" Padding="12,8">
-            <TextBlock Text="{Binding AuditSummaryText}" FontSize="12" Foreground="#CBD5E1" />
+            <TextBlock Grid.Column="2" Text="{Binding TestResultText}" VerticalAlignment="Center" FontSize="13" FontWeight="Bold" Foreground="#10B981" />
+          </Grid>
+
+          <Border Classes="SubtleCard" Padding="12,8">
+            <TextBlock Text="{Binding AuditSummaryText}" FontSize="12" Foreground="#CBD5E1" FontWeight="Medium" />
           </Border>
         </StackPanel>
 
@@ -66,7 +90,7 @@
           <StackPanel Spacing="16">
             <!-- 1. Token Palette -->
             <StackPanel Spacing="8">
-              <TextBlock Text="1. PALET TOKEN (Klik untuk Sematkan di Kanvas):" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
+              <TextBlock Text="1. PALET BALOK TOKEN (Klik untuk Menambahkan ke Rumus):" FontSize="11" FontWeight="Bold" Foreground="#64748B" />
               <ItemsControl ItemsSource="{Binding PaletteTokens}">
                 <ItemsControl.ItemsPanel>
                   <ItemsPanelTemplate>
@@ -76,12 +100,15 @@
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="vm:LegoTokenChipItem">
                     <Button Classes="TokenChip"
+                            Background="{Binding BackgroundHex}"
+                            BorderBrush="{Binding BorderHex}"
+                            Foreground="#FFFFFF"
                             Command="{Binding $parent[UserControl].((vm:IkuFormulaPageViewModel)DataContext).PinTokenToCanvasCommand}"
                             CommandParameter="{Binding}"
-                            Margin="0,0,6,6">
-                      <StackPanel Orientation="Horizontal" Spacing="4">
-                        <TextBlock Text="{Binding Icon}" />
-                        <TextBlock Text="{Binding Label}" />
+                            Margin="0,0,8,8">
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="{Binding Icon}" FontSize="12" />
+                        <TextBlock Text="{Binding Label}" FontSize="12" FontWeight="SemiBold" />
                       </StackPanel>
                     </Button>
                   </DataTemplate>
@@ -91,8 +118,8 @@
 
             <!-- 2. Formula Box (WrapPanel — Zero Collision) -->
             <StackPanel Spacing="8">
-              <TextBlock Text="2. KOTAK FORMULA UTAMA (Klik Chip untuk Melepas):" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
-              <Border Background="#0F172A" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="8" Padding="16" MinHeight="120">
+              <TextBlock Text="2. KOTAK STRUKTUR RUMUS (Klik Balok untuk Melepas):" FontSize="11" FontWeight="Bold" Foreground="#64748B" />
+              <Border Background="#090E18" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="8" Padding="16" MinHeight="128">
                 <ItemsControl ItemsSource="{Binding CanvasTokens}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -102,12 +129,15 @@
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:LegoTokenChipItem">
                       <Button Classes="TokenChip"
+                              Background="{Binding BackgroundHex}"
+                              BorderBrush="{Binding BorderHex}"
+                              Foreground="#FFFFFF"
                               Command="{Binding $parent[UserControl].((vm:IkuFormulaPageViewModel)DataContext).RemoveCanvasTokenCommand}"
                               CommandParameter="{Binding}"
-                              Margin="0,0,6,6">
-                        <StackPanel Orientation="Horizontal" Spacing="4">
-                          <TextBlock Text="{Binding Icon}" />
-                          <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                              Margin="0,0,8,8">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                          <TextBlock Text="{Binding Icon}" FontSize="12" />
+                          <TextBlock Text="{Binding Label}" FontSize="12" FontWeight="Bold" />
                         </StackPanel>
                       </Button>
                     </DataTemplate>

@@ -8,67 +8,96 @@
   <DockPanel Margin="24,16" LastChildFill="True">
 
     <!-- 1. Table Tabs & Action Toolbar -->
-    <StackPanel DockPanel.Dock="Top" Spacing="12" Margin="0,0,0,12">
+    <StackPanel DockPanel.Dock="Top" Spacing="12" Margin="0,0,0,16">
+
       <!-- Dynamic Tables Switcher (1-5+ tables per year) -->
-      <WrapPanel Orientation="Horizontal">
-        <ItemsControl ItemsSource="{Binding Tables}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="schema:TableDefinition">
-              <Border Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="12,6" Margin="0,0,8,4">
-                <TextBlock Text="{Binding DisplayName}" FontSize="12" FontWeight="SemiBold" Foreground="#F8FAFC" />
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </WrapPanel>
+      <Grid ColumnDefinitions="*,Auto">
+        <WrapPanel Grid.Column="0" Orientation="Horizontal">
+          <ItemsControl ItemsSource="{Binding Tables}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="schema:TableDefinition">
+                <Border Background="#162032" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="8" Padding="12,6" Margin="0,0,8,4">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconTable}" Width="12" Height="12" Foreground="#38BDF8" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding DisplayName}" FontSize="12" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </WrapPanel>
 
-      <!-- Action Buttons + Column-Group Quick-Jump Pills (Zero-Collision WrapPanel) -->
-      <WrapPanel Orientation="Horizontal">
-        <Button Content="+ Baris" Command="{Binding AddQuickSampleRowCommand}" Padding="12,6" CornerRadius="6" Margin="0,0,8,8" />
-        <Button Content="📄 Unggah DATA_INPUT.xlsx" Click="OnImportExcelClicked" Padding="12,6" CornerRadius="6" Margin="0,0,8,8" />
+        <!-- Right Quick Action Buttons -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+          <Button Classes="PrimaryAction" Command="{Binding AddQuickSampleRowCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconPlus}" Width="12" Height="12" Foreground="#FFFFFF" />
+              <TextBlock Text="Tambah Baris" FontSize="12" />
+            </StackPanel>
+          </Button>
 
-        <Border Width="1" Background="#334155" Margin="4,0,12,8" />
+          <Button Classes="SecondaryAction" Click="OnImportExcelClicked">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconUpload}" Width="12" Height="12" Foreground="#38BDF8" />
+              <TextBlock Text="Unggah Excel (.xlsx)" FontSize="12" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Grid>
 
-        <!-- 4 Semantic Super-Header Banding Pills -->
-        <Button Classes="GroupPill" Content="Semua" Command="{Binding ToggleGroupCommand}" CommandParameter="ALL" Background="#334155" Margin="0,0,6,8" />
-        <Button Classes="GroupPill" Content="🔵 Info Dasar (30)" Command="{Binding ToggleGroupCommand}" CommandParameter="INFO DASAR" Background="#1E3A8A40" BorderBrush="#3B82F6" Margin="0,0,6,8" />
-        <Button Classes="GroupPill" Content="🟠 Pemeriksaan (14)" Command="{Binding ToggleGroupCommand}" CommandParameter="DATA PEMERIKSAAN" Background="#78350F40" BorderBrush="#F59E0B" Margin="0,0,6,8" />
-        <Button Classes="GroupPill" Content="🟣 Putusan PFPD (11)" Command="{Binding ToggleGroupCommand}" CommandParameter="PUTUSAN PFPD" Background="#4C1D9540" BorderBrush="#8B5CF6" Margin="0,0,6,8" />
-        <Button Classes="GroupPill" Content="🟢 OneDrive (1)" Command="{Binding ToggleGroupCommand}" CommandParameter="LINK DATA" Background="#064E3B40" BorderBrush="#10B981" Margin="0,0,6,8" />
-      </WrapPanel>
+      <!-- Super-Header Filter Banding Pills -->
+      <Grid ColumnDefinitions="*,Auto">
+        <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+          <TextBlock Text="TAMPILKAN KOLOM:" FontSize="11" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,8,8" />
+          <Button Classes="GroupPill" Content="Semua (56)" Command="{Binding ToggleGroupCommand}" CommandParameter="ALL" Background="#1E293B" BorderBrush="#334155" Foreground="#E2E8F0" Margin="0,0,6,8" />
+          <Button Classes="GroupPill" Content="Info Dasar (30)" Command="{Binding ToggleGroupCommand}" CommandParameter="INFO DASAR" Background="#1E3A8A30" BorderBrush="#3B82F6" Foreground="#60A5FA" Margin="0,0,6,8" />
+          <Button Classes="GroupPill" Content="Pemeriksaan (14)" Command="{Binding ToggleGroupCommand}" CommandParameter="DATA PEMERIKSAAN" Background="#78350F30" BorderBrush="#F59E0B" Foreground="#FBBF24" Margin="0,0,6,8" />
+          <Button Classes="GroupPill" Content="Putusan PFPD (11)" Command="{Binding ToggleGroupCommand}" CommandParameter="PUTUSAN PFPD" Background="#4C1D9530" BorderBrush="#8B5CF6" Foreground="#A78BFA" Margin="0,0,6,8" />
+          <Button Classes="GroupPill" Content="Link Data (1)" Command="{Binding ToggleGroupCommand}" CommandParameter="LINK DATA" Background="#064E3B30" BorderBrush="#10B981" Foreground="#34D399" Margin="0,0,6,8" />
+        </WrapPanel>
 
-      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#94A3B8" />
+        <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,0,8" />
+      </Grid>
+
     </StackPanel>
 
-    <!-- 2. Master-Detail Row Drawer (Bottom Panel for PIB Lembar Lanjutan, Containers & OneDrive) -->
+    <!-- 2. Master-Detail Row Drawer (Bottom Panel) -->
     <Border DockPanel.Dock="Bottom"
             Classes="BentoCard"
-            Margin="0,12,0,0"
-            Padding="12"
+            Margin="0,16,0,0"
+            Padding="16"
             MaxHeight="160">
       <DockPanel>
-        <TextBlock DockPanel.Dock="Top"
-                   Text="📂 LACI RINCIAN MASTER-DETAIL (Lembar Lanjutan PIB, Kontainer, Dokumen &amp; Folder OneDrive)"
-                   FontSize="12"
-                   FontWeight="SemiBold"
-                   Foreground="#38BDF8"
-                   Margin="0,0,0,8" />
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <PathIcon Data="{StaticResource IconFolder}" Width="14" Height="14" Foreground="#38BDF8" VerticalAlignment="Center" />
+            <TextBlock Text="RINCIAN BARIS DOKUMEN (Master-Detail Inspector)"
+                       FontSize="11"
+                       FontWeight="Bold"
+                       Foreground="#38BDF8"
+                       VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Grid.Column="1" Text="Klik baris pada tabel untuk melihat rincian terintegrasi" FontSize="10" Foreground="#64748B" />
+        </Grid>
+
         <ScrollViewer>
           <ItemsControl ItemsSource="{Binding SelectedRowDetails}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:RowDetailDisplayItem">
-                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,4">
-                  <Border Background="#064E3B40" BorderBrush="#10B981" BorderThickness="1" CornerRadius="4" Padding="6,2">
-                    <TextBlock Text="{Binding Badge}" FontSize="11" Foreground="#10B981" />
-                  </Border>
-                  <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                  <TextBlock Text="{Binding Subtitle}" FontSize="12" Foreground="#94A3B8" TextTrimming="CharacterEllipsis" />
-                </StackPanel>
+                <Border Classes="SubtleCard" Margin="0,0,0,6">
+                  <Grid ColumnDefinitions="Auto,Auto,*">
+                    <Border Grid.Column="0" Background="#1E3A8A30" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                      <TextBlock Text="{Binding Badge}" FontSize="10" FontWeight="Bold" Foreground="#38BDF8" />
+                    </Border>
+                    <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Grid.Column="2" Text="{Binding Subtitle}" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                  </Grid>
+                </Border>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
@@ -77,7 +106,7 @@
     </Border>
 
     <!-- 3. Virtualized DataGrid with 3 FROZEN COLUMNS & 4 Super-Header Bands -->
-    <Border Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="8">
+    <Border Classes="BentoCard" Padding="0" ClipToBounds="True">
       <DataGrid ItemsSource="{Binding Rows}"
                 SelectedItem="{Binding SelectedRow}"
                 AutoGenerateColumns="False"
@@ -86,35 +115,36 @@
                 CanUserReorderColumns="True"
                 CanUserResizeColumns="True"
                 GridLinesVisibility="All"
-                RowHeight="36">
+                RowHeight="38">
         <DataGrid.Columns>
-          <!-- FROZEN (3 Identity Columns) -->
-          <DataGridTextColumn Header="No." Binding="{Binding No}" Width="64" />
-          <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="84" />
-          <DataGridTextColumn Header="No. IP" Binding="{Binding NoIp}" Width="120" />
+          <!-- FROZEN COLUMNS -->
+          <DataGridTextColumn Header="No." Binding="{Binding No}" Width="56" />
+          <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="80" />
+          <DataGridTextColumn Header="No. IP" Binding="{Binding NoIp}" Width="110" />
 
-          <!-- 🔵 INFO DASAR -->
-          <DataGridTextColumn Header="🔵 Tanggal IP" Binding="{Binding TanggalIp}" Width="108" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
-          <DataGridTextColumn Header="🔵 TPS" Binding="{Binding Tps}" Width="80" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
-          <DataGridTextColumn Header="🔵 Importir" Binding="{Binding Importir}" Width="200" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
-          <DataGridTextColumn Header="🔵 FCL/LCL" Binding="{Binding FclLcl}" Width="80" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
-          <DataGridTextColumn Header="🔵 Jns" Binding="{Binding JumlahJenis}" Width="64" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
-          <DataGridTextColumn Header="🔵 JENIS BARANG" Binding="{Binding JenisBarang}" Width="220" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
-          <DataGridTextColumn Header="🔵 TOTAL PDRI" Binding="{Binding TotalPdri}" Width="140" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
+          <!-- INFO DASAR -->
+          <DataGridTextColumn Header="Tanggal IP" Binding="{Binding TanggalIp}" Width="108" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
+          <DataGridTextColumn Header="TPS" Binding="{Binding Tps}" Width="80" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
+          <DataGridTextColumn Header="Importir" Binding="{Binding Importir}" Width="220" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
+          <DataGridTextColumn Header="FCL/LCL" Binding="{Binding FclLcl}" Width="80" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
+          <DataGridTextColumn Header="Jml Jenis" Binding="{Binding JumlahJenis}" Width="90" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
+          <DataGridTextColumn Header="Jenis Barang" Binding="{Binding JenisBarang}" Width="220" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
+          <DataGridTextColumn Header="Total PDRI" Binding="{Binding TotalPdri}" Width="140" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowInfoDasar}" />
 
-          <!-- 🟠 DATA PEMERIKSAAN -->
-          <DataGridTextColumn Header="🟠 TK" Binding="{Binding TkPeriksa}" Width="84" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
-          <DataGridTextColumn Header="🟠 Waktu PKB" Binding="{Binding WaktuPkb}" Width="144" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
-          <DataGridTextColumn Header="🟠 Mulai Periksa" Binding="{Binding WaktuMulai}" Width="144" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
-          <DataGridTextColumn Header="🟠 Selesai LHP" Binding="{Binding SelesaiLhp}" Width="144" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
-          <DataGridTextColumn Header="🟠 TEMUAN?" Binding="{Binding Temuan}" Width="88" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
+          <!-- DATA PEMERIKSAAN -->
+          <DataGridTextColumn Header="TK Periksa" Binding="{Binding TkPeriksa}" Width="90" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
+          <DataGridTextColumn Header="Waktu PKB" Binding="{Binding WaktuPkb}" Width="140" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
+          <DataGridTextColumn Header="Mulai Periksa" Binding="{Binding WaktuMulai}" Width="140" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
+          <DataGridTextColumn Header="Selesai Periksa" Binding="{Binding SelesaiPeriksa}" Width="140" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
+          <DataGridTextColumn Header="Selesai LHP" Binding="{Binding SelesaiLhp}" Width="140" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
+          <DataGridTextColumn Header="Temuan" Binding="{Binding Temuan}" Width="80" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowDataPemeriksaan}" />
 
-          <!-- 🟣 PUTUSAN PFPD -->
-          <DataGridTextColumn Header="🟣 NOTUL?" Binding="{Binding Notul}" Width="88" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowPutusanPfpd}" />
-          <DataGridTextColumn Header="🟣 Total Kurang Bayar" Binding="{Binding TotalKurangBayar}" Width="152" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowPutusanPfpd}" />
+          <!-- PUTUSAN PFPD -->
+          <DataGridTextColumn Header="Notul" Binding="{Binding Notul}" Width="80" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowPutusanPfpd}" />
+          <DataGridTextColumn Header="Kurang Bayar" Binding="{Binding TotalKurangBayar}" Width="140" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowPutusanPfpd}" />
 
-          <!-- 🟢 LINK DATA -->
-          <DataGridTextColumn Header="🟢 Nama Folder Onedrive" Binding="{Binding NamaFolderOnedrive}" Width="280" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowLinkData}" />
+          <!-- LINK DATA -->
+          <DataGridTextColumn Header="Folder OneDrive" Binding="{Binding NamaFolderOnedrive}" Width="320" IsVisible="{Binding $parent[UserControl].((vm:DataTablePageViewModel)DataContext).ShowLinkData}" />
         </DataGrid.Columns>
       </DataGrid>
     </Border>

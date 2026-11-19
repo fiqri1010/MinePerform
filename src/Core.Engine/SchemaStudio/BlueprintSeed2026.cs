@@ -1,3 +1,4 @@
+using System.Globalization;
 using MinePerform.Core.LegoTokenEngine;
 
 namespace MinePerform.Core.SchemaStudio;
@@ -396,4 +397,71 @@ public static class BlueprintSeed2026
         string? currency = null,
         int width = 140) =>
         new("", "", groupId, key, display, type, frozen, computed, expr, currency, null, order, width);
+
+    public static void SeedSampleInspectionRows(DynamicSqliteStudio studio, TableDefinition inputTable, int year = 2026)
+    {
+        var cols = studio.GetColumns(inputTable.Id);
+        var samples = new (string no, string ip, string tgl, string tps, string imp, string fcl, string jmlJenis, string brg, string tk, string pkb, string mulai, string slsP, string slsL, string temuan, string notul, string bm, string ppn, string kb)[]
+        {
+            ("1", "814217", $"{year}-01-05", "NPCT1", "PT. INDOFOOD SUKSES MAKMUR TBK", "FCL", "1", "WHEAT FLOUR ADDITIVE", "10%", $"{year}-01-05 08:30", $"{year}-01-05 09:15", $"{year}-01-05 11:20", $"{year}-01-05 12:00", "0", "TIDAK", "45000000", "18500000", "0"),
+            ("2", "814225", $"{year}-01-08", "KOJA", "PT. SAMSUNG ELECTRONICS INDONESIA", "FCL", "1", "LCD PANEL SPARE PARTS", "30%", $"{year}-01-08 09:00", $"{year}-01-08 09:45", $"{year}-01-08 12:10", $"{year}-01-08 13:00", "0", "TIDAK", "85000000", "35000000", "0"),
+            ("3", "814239", $"{year}-01-12", "NCT1", "PT. TOYOTA MOTOR MANUFACTURING", "FCL", "3", "AUTOMOTIVE CKD STAMPING PARTS", "30%", $"{year}-01-12 10:15", $"{year}-01-12 11:00", $"{year}-01-12 14:30", $"{year}-01-12 15:15", "1", "YA", "120000000", "48000000", "14500000"),
+            ("4", "814251", $"{year}-01-18", "JICT", "PT. UNILEVER INDONESIA TBK", "LCL", "1", "SURFACTANT RAW CHEMICAL", "10%", $"{year}-01-18 08:45", $"{year}-01-18 09:20", $"{year}-01-18 10:50", $"{year}-01-18 11:30", "0", "TIDAK", "32000000", "14000000", "0"),
+            ("5", "814266", $"{year}-01-22", "GRAHA", "PT. LG ELECTRONICS INDONESIA", "FCL", "1", "COMPRESSOR REFRIGERANT UNIT", "30%", $"{year}-01-22 13:00", $"{year}-01-22 13:40", $"{year}-01-22 15:50", $"{year}-01-22 16:30", "0", "TIDAK", "62000000", "27000000", "0"),
+            ("6", "814278", $"{year}-01-28", "TPSL", "PT. MAYORA INDAH TBK", "FCL", "2", "CHOCOLATE PASTE & PACKAGING", "10%", $"{year}-01-28 09:30", $"{year}-01-28 10:10", $"{year}-01-28 12:00", $"{year}-01-28 12:45", "0", "TIDAK", "28000000", "12000000", "0"),
+            ("7", "814290", $"{year}-02-03", "NPCT1", "PT. ASTRA DAIHATSU MOTOR", "FCL", "1", "AUTOMOTIVE FASTENERS & BOLTS", "10%", $"{year}-02-03 08:15", $"{year}-02-03 09:00", $"{year}-02-03 10:45", $"{year}-02-03 11:30", "0", "TIDAK", "38000000", "16000000", "0"),
+            ("8", "814304", $"{year}-02-07", "KOJA", "PT. KALBE FARMA TBK", "FCL", "1", "PHARMACEUTICAL RAW EXCIPIENT", "30%", $"{year}-02-07 10:00", $"{year}-02-07 10:40", $"{year}-02-07 13:00", $"{year}-02-07 13:45", "0", "TIDAK", "74000000", "31000000", "0")
+        };
+
+        foreach (var s in samples)
+        {
+            studio.InsertRow(inputTable, cols, new Dictionary<string, string?>
+            {
+                ["no"] = s.no,
+                ["status"] = "SPPB",
+                ["no_ip"] = s.ip,
+                ["tanggal_ip"] = s.tgl,
+                ["tps"] = s.tps,
+                ["importir"] = s.imp,
+                ["fcl_lcl"] = s.fcl,
+                ["jumlah_jenis"] = s.jmlJenis,
+                ["jml_jenis_periksa"] = s.jmlJenis,
+                ["jenis_barang"] = s.brg,
+                ["tk_periksa"] = s.tk,
+                ["waktu_pkb"] = s.pkb,
+                ["waktu_mulai_periksa"] = s.mulai,
+                ["selesai_periksa"] = s.slsP,
+                ["selesai_lhp"] = s.slsL,
+                ["temuan"] = s.temuan,
+                ["notul"] = s.notul,
+                ["bm"] = s.bm,
+                ["ppn"] = s.ppn,
+                ["total_kurang_bayar"] = s.kb,
+                ["nama_folder_onedrive"] = $"{s.no}. {s.ip}_{DateTime.Parse(s.tgl, CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)}_{s.imp}_{s.tps}_{s.brg}"
+            }, year);
+        }
+    }
+
+    public static void SeedSamplePresensiRows(DynamicSqliteStudio studio, TableDefinition presensiTable, int year = 2026)
+    {
+        var cols = studio.GetColumns(presensiTable.Id);
+        var dates = new[] { $"{year}-01-05", $"{year}-01-08", $"{year}-01-12", $"{year}-01-18", $"{year}-01-22" };
+        foreach (var d in dates)
+        {
+            studio.InsertRow(presensiTable, cols, new Dictionary<string, string?>
+            {
+                ["tanggal"] = d,
+                ["shift"] = "PAGI",
+                ["cluster"] = "A",
+                ["jam_absen_ceisa_impor"] = "07:25",
+                ["jam_absen_ceisa_40"] = "07:28",
+                ["status_patuh_impor"] = "PATUH",
+                ["status_patuh_40"] = "PATUH",
+                ["indeks_absen_impor"] = "4.0",
+                ["indeks_absen_40"] = "4.0",
+                ["indeks_produktivitas"] = "4.0",
+                ["keterangan"] = "Tepat Waktu"
+            }, year);
+        }
+    }
 }

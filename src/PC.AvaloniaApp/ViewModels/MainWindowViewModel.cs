@@ -38,7 +38,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IDisposable
     private WorkspaceModel? _activeWorkspace;
 
     [ObservableProperty]
-    private int _selectedNavIndex = 1; // Default to DATA page
+    private int _selectedNavIndex; // Default to Ringkasan (Bento-Grid Dashboard)
 
     [ObservableProperty]
     private bool _isNavExpanded = true;
@@ -101,6 +101,20 @@ public sealed partial class MainWindowViewModel : ObservableObject, IDisposable
 
         foreach (var ws in existing) Workspaces.Add(ws);
         ActiveWorkspace = Workspaces.FirstOrDefault(w => w.IsActive) ?? Workspaces.First();
+
+        // If the table currently has 0 rows (e.g. freshly seeded), seed realistic operational rows!
+        var primaryTable = _studio.GetTableBySlug(ActiveWorkspace.Id, "input");
+        if (primaryTable != null && _studio.CountRows(primaryTable) == 0)
+        {
+            BlueprintSeed2026.SeedSampleInspectionRows(_studio, primaryTable, ActiveWorkspace.Year);
+            var presensiTable = _studio.GetTableBySlug(ActiveWorkspace.Id, "jam_presensi");
+            if (presensiTable != null && _studio.CountRows(presensiTable) == 0)
+            {
+                BlueprintSeed2026.SeedSamplePresensiRows(_studio, presensiTable, ActiveWorkspace.Year);
+            }
+            DataPage.LoadWorkspace(ActiveWorkspace);
+            ChartPage.LoadWorkspace(ActiveWorkspace);
+        }
 
         UpdateRamTelemetry();
         _telemetryTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };

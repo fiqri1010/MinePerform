@@ -6,84 +6,149 @@
              x:DataType="vm:ChartSummaryPageViewModel">
 
   <ScrollViewer VerticalScrollBarVisibility="Auto">
-    <StackPanel Spacing="16" Margin="16">
+    <StackPanel Spacing="16" Margin="24">
 
       <!-- Header & Period Filter Bar -->
       <Grid ColumnDefinitions="*,Auto">
         <StackPanel Grid.Column="0" Spacing="4">
-          <TextBlock Text="Chart &amp; Summary — Dashboard Bento-Grid"
-                     FontSize="20" FontWeight="SemiBold" Foreground="#F8FAFC" />
-          <TextBlock Text="Ringkasan NKP, Volume IP, Temuan, Kurang Bayar, Premi Insentif, dan Pareto TPS / Keterlambatan."
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <PathIcon Data="{StaticResource IconDashboard}" Width="20" Height="20" Foreground="#38BDF8" VerticalAlignment="Center" />
+            <TextBlock Text="Ringkasan Kinerja &amp; Bento-Grid Analytics"
+                       FontSize="20" FontWeight="Bold" Foreground="#F8FAFC" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Text="Monitoring NKP real-time, volume dokumen impor, rasio temuan, kurang bayar, dan proyeksi premi insentif."
                      FontSize="12" Foreground="#94A3B8" />
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-          <Button Classes="GroupPill" Content="Bulanan"
-                  Background="#1E293B" BorderBrush="#334155" Foreground="#E2E8F0"
-                  Command="{Binding SelectPeriodCommand}" CommandParameter="Bulanan" />
-          <Button Classes="GroupPill" Content="Triwulanan"
-                  Background="#1E293B" BorderBrush="#334155" Foreground="#E2E8F0"
-                  Command="{Binding SelectPeriodCommand}" CommandParameter="Triwulanan" />
-          <Button Classes="GroupPill" Content="Semesteran"
-                  Background="#1E293B" BorderBrush="#334155" Foreground="#E2E8F0"
-                  Command="{Binding SelectPeriodCommand}" CommandParameter="Semesteran" />
-          <Button Classes="GroupPill" Content="Tahunan"
-                  Background="#1E3A8A" BorderBrush="#3B82F6" Foreground="#F8FAFC"
-                  Command="{Binding SelectPeriodCommand}" CommandParameter="Tahunan" />
-        </StackPanel>
+        <!-- Segmented Period Switcher -->
+        <Border Grid.Column="1" Background="#111827" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="8" Padding="4" VerticalAlignment="Center">
+          <StackPanel Orientation="Horizontal" Spacing="4">
+            <Button Classes="GroupPill" Content="Bulanan"
+                    Background="Transparent" BorderThickness="0" Foreground="#94A3B8"
+                    Command="{Binding SelectPeriodCommand}" CommandParameter="Bulanan" />
+            <Button Classes="GroupPill" Content="Triwulanan"
+                    Background="Transparent" BorderThickness="0" Foreground="#94A3B8"
+                    Command="{Binding SelectPeriodCommand}" CommandParameter="Triwulanan" />
+            <Button Classes="GroupPill" Content="Semesteran"
+                    Background="Transparent" BorderThickness="0" Foreground="#94A3B8"
+                    Command="{Binding SelectPeriodCommand}" CommandParameter="Semesteran" />
+            <Button Classes="GroupPill" Content="Tahunan"
+                    Background="#2563EB" BorderThickness="0" Foreground="#FFFFFF"
+                    Command="{Binding SelectPeriodCommand}" CommandParameter="Tahunan" />
+          </StackPanel>
+        </Border>
       </Grid>
 
       <!-- Row 1: 4-Column Bento KPI Cards -->
       <Grid ColumnDefinitions="*,*,*,*">
+
+        <!-- KPI 1: NKP -->
         <Border Grid.Column="0" Classes="BentoCard" Margin="0,0,8,0">
+          <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+              <GradientStop Color="#10B981" Offset="0" />
+              <GradientStop Color="#1E293B" Offset="1" />
+            </LinearGradientBrush>
+          </Border.BorderBrush>
           <StackPanel Spacing="8">
-            <TextBlock Text="NILAI KINERJA PEGAWAI (NKP)" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
-            <TextBlock Text="{Binding NkpText}" FontSize="28" FontWeight="Bold" Foreground="#10B981" />
-            <TextBlock Text="Konsolidasi Bobot IKU Aktif" FontSize="12" Foreground="#64748B" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="NILAI KINERJA PEGAWAI (NKP)" FontSize="11" FontWeight="Bold" Foreground="#94A3B8" />
+              <Border Grid.Column="1" Background="#064E3B40" BorderBrush="#10B981" BorderThickness="1" CornerRadius="8" Padding="8,2">
+                <TextBlock Text="AKTIF" FontSize="9" FontWeight="Bold" Foreground="#10B981" />
+              </Border>
+            </Grid>
+            <TextBlock Text="{Binding NkpText}" FontSize="32" FontWeight="Bold" Foreground="#10B981" />
+            <TextBlock Text="Konsolidasi Bobot Portofolio IKU 2026" FontSize="11" Foreground="#64748B" />
           </StackPanel>
         </Border>
 
+        <!-- KPI 2: Volume IP & Temuan -->
         <Border Grid.Column="1" Classes="BentoCard" Margin="8,0">
+          <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+              <GradientStop Color="#3B82F6" Offset="0" />
+              <GradientStop Color="#1E293B" Offset="1" />
+            </LinearGradientBrush>
+          </Border.BorderBrush>
           <StackPanel Spacing="8">
-            <TextBlock Text="VOLUME IP &amp; TEMUAN" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
-            <TextBlock Text="{Binding TotalDocsText}" FontSize="20" FontWeight="Bold" Foreground="#3B82F6" TextWrapping="Wrap" />
-            <TextBlock Text="{Binding FclLclText}" FontSize="12" Foreground="#CBD5E1" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="VOLUME IP &amp; TEMUAN" FontSize="11" FontWeight="Bold" Foreground="#94A3B8" />
+              <Border Grid.Column="1" Background="#1E3A8A40" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="8" Padding="8,2">
+                <TextBlock Text="DOKUMEN" FontSize="9" FontWeight="Bold" Foreground="#3B82F6" />
+              </Border>
+            </Grid>
+            <TextBlock Text="{Binding TotalDocsText}" FontSize="20" FontWeight="Bold" Foreground="#38BDF8" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding FclLclText}" FontSize="11" Foreground="#94A3B8" />
           </StackPanel>
         </Border>
 
+        <!-- KPI 3: Notul & Kurang Bayar -->
         <Border Grid.Column="2" Classes="BentoCard" Margin="8,0">
+          <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+              <GradientStop Color="#F59E0B" Offset="0" />
+              <GradientStop Color="#1E293B" Offset="1" />
+            </LinearGradientBrush>
+          </Border.BorderBrush>
           <StackPanel Spacing="8">
-            <TextBlock Text="NOTUL &amp; KURANG BAYAR" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
-            <TextBlock Text="{Binding KurangBayarText}" FontSize="20" FontWeight="Bold" Foreground="#F59E0B" TextWrapping="Wrap" />
-            <TextBlock Text="{Binding NotulText}" FontSize="12" Foreground="#CBD5E1" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="PENETAPAN NOTUL &amp; KURANG BAYAR" FontSize="11" FontWeight="Bold" Foreground="#94A3B8" />
+              <Border Grid.Column="1" Background="#78350F40" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="8" Padding="8,2">
+                <TextBlock Text="PENERIMAAN" FontSize="9" FontWeight="Bold" Foreground="#F59E0B" />
+              </Border>
+            </Grid>
+            <TextBlock Text="{Binding KurangBayarText}" FontSize="20" FontWeight="Bold" Foreground="#FBBF24" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding NotulText}" FontSize="11" Foreground="#94A3B8" />
           </StackPanel>
         </Border>
 
+        <!-- KPI 4: Premi Insentif -->
         <Border Grid.Column="3" Classes="BentoCard" Margin="8,0,0,0">
+          <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+              <GradientStop Color="#8B5CF6" Offset="0" />
+              <GradientStop Color="#1E293B" Offset="1" />
+            </LinearGradientBrush>
+          </Border.BorderBrush>
           <StackPanel Spacing="8">
-            <TextBlock Text="PREMI INSENTIF &amp; RUN-RATE" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
-            <TextBlock Text="{Binding PremiRunRateText}" FontSize="20" FontWeight="Bold" Foreground="#8B5CF6" />
-            <TextBlock Text="{Binding PremiCategoryText}" FontSize="12" Foreground="#CBD5E1" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="PREMI INSENTIF &amp; RUN-RATE" FontSize="11" FontWeight="Bold" Foreground="#94A3B8" />
+              <Border Grid.Column="1" Background="#4C1D9540" BorderBrush="#8B5CF6" BorderThickness="1" CornerRadius="8" Padding="8,2">
+                <TextBlock Text="PROYEKSI" FontSize="9" FontWeight="Bold" Foreground="#A78BFA" />
+              </Border>
+            </Grid>
+            <TextBlock Text="{Binding PremiRunRateText}" FontSize="20" FontWeight="Bold" Foreground="#A78BFA" />
+            <TextBlock Text="{Binding PremiCategoryText}" FontSize="11" Foreground="#94A3B8" />
           </StackPanel>
         </Border>
       </Grid>
 
-      <!-- Row 2: TPS Distribution & Delay Pareto Charts -->
+      <!-- Row 2: Charts Grid (TPS Distribution & Delay Pareto) -->
       <Grid ColumnDefinitions="*,*">
+
         <!-- TPS Distribution -->
         <Border Grid.Column="0" Classes="BentoCard" Margin="0,0,8,0">
-          <StackPanel Spacing="12">
-            <TextBlock Text="Distribusi Pemeriksaan per TPS" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+          <StackPanel Spacing="16">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Spacing="2">
+                <TextBlock Text="Distribusi Pemeriksaan per TPS" FontSize="15" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                <TextBlock Text="Beban kerja per lapangan penimbunan kontainer" FontSize="11" Foreground="#64748B" />
+              </StackPanel>
+              <Border Grid.Column="1" Background="#162032" CornerRadius="6" Padding="8,4">
+                <TextBlock Text="Peringkat Volume" FontSize="10" Foreground="#94A3B8" />
+              </Border>
+            </Grid>
+
             <ItemsControl ItemsSource="{Binding TpsDistribution}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:BarChartRowItem">
-                  <Grid ColumnDefinitions="120,*,48" Margin="0,4">
-                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontSize="12" Foreground="#E2E8F0"
+                  <Grid ColumnDefinitions="110,*,50" Margin="0,4">
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontSize="12" FontWeight="Medium" Foreground="#E2E8F0"
                                TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" />
                     <ProgressBar Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding WidthRatio}"
-                                 Height="12" Foreground="#3B82F6" Background="#0F172A" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="2" Text="{Binding Count}" FontSize="12" FontWeight="SemiBold"
-                               Foreground="#94A3B8" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                 Height="8" CornerRadius="4" Foreground="#3B82F6" Background="#0A0F1D" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding Count, StringFormat='{}{0} IP'}" FontSize="11" FontWeight="SemiBold"
+                               Foreground="#38BDF8" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0" />
                   </Grid>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
@@ -93,30 +158,47 @@
 
         <!-- Delay Reasons Pareto -->
         <Border Grid.Column="1" Classes="BentoCard" Margin="8,0,0,0">
-          <StackPanel Spacing="12">
-            <TextBlock Text="Pareto Alasan Mulai &gt; 1 Jam" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+          <StackPanel Spacing="16">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Spacing="2">
+                <TextBlock Text="Pareto Alasan Mulai &gt; 1 Jam" FontSize="15" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                <TextBlock Text="Faktor penentu keterlambatan dimulainya fisik" FontSize="11" Foreground="#64748B" />
+              </StackPanel>
+              <Border Grid.Column="1" Background="#162032" CornerRadius="6" Padding="8,4">
+                <TextBlock Text="Analisis SLA" FontSize="10" Foreground="#F59E0B" />
+              </Border>
+            </Grid>
+
             <ItemsControl ItemsSource="{Binding DelayReasons}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:BarChartRowItem">
-                  <Grid ColumnDefinitions="160,*,48" Margin="0,4">
-                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontSize="12" Foreground="#E2E8F0"
+                  <Grid ColumnDefinitions="160,*,50" Margin="0,4">
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontSize="12" FontWeight="Medium" Foreground="#E2E8F0"
                                TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" />
                     <ProgressBar Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding WidthRatio}"
-                                 Height="12" Foreground="#F59E0B" Background="#0F172A" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="2" Text="{Binding Count}" FontSize="12" FontWeight="SemiBold"
-                               Foreground="#94A3B8" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                 Height="8" CornerRadius="4" Foreground="#F59E0B" Background="#0A0F1D" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding Count, StringFormat='{}{0} Kasus'}" FontSize="11" FontWeight="SemiBold"
+                               Foreground="#FBBF24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0" />
                   </Grid>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
           </StackPanel>
         </Border>
+
       </Grid>
 
-      <!-- Row 3: Monthly Trend Strip -->
+      <!-- Row 3: Monthly Trend Series Strip -->
       <Border Classes="BentoCard">
-        <StackPanel Spacing="12">
-          <TextBlock Text="Tren Volume Pemeriksaan &amp; Temuan Bulanan" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" />
+        <StackPanel Spacing="16">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2">
+              <TextBlock Text="Tren Volume Pemeriksaan &amp; Temuan Bulanan" FontSize="15" FontWeight="SemiBold" Foreground="#F8FAFC" />
+              <TextBlock Text="Siklus bulanan jumlah dokumen IP dan efektivitas pendeteksian temuan" FontSize="11" Foreground="#64748B" />
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="Tahun Anggaran 2026" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" />
+          </Grid>
+
           <ItemsControl ItemsSource="{Binding MonthlyTrend}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
@@ -125,12 +207,15 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="lego:MonthlyTrendPoint">
-                <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1"
-                        CornerRadius="8" Padding="12,8" Margin="0,0,8,8" MinWidth="120">
-                  <StackPanel Spacing="4">
-                    <TextBlock Text="{Binding Label}" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" />
-                    <TextBlock Text="{Binding DocumentCount, StringFormat='{}{0} IP'}" FontSize="16" FontWeight="Bold" Foreground="#3B82F6" />
-                    <TextBlock Text="{Binding FindingsCount, StringFormat='Temuan: {0}'}" FontSize="12" Foreground="#10B981" />
+                <Border Background="#0B101D" BorderBrush="#1E293B" BorderThickness="1"
+                        CornerRadius="8" Padding="12,8" Margin="0,0,8,8" MinWidth="128">
+                  <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="*,Auto">
+                      <TextBlock Text="{Binding Label}" FontSize="12" FontWeight="Bold" Foreground="#E2E8F0" />
+                      <Ellipse Grid.Column="1" Width="6" Height="6" Fill="#3B82F6" VerticalAlignment="Center" />
+                    </Grid>
+                    <TextBlock Text="{Binding DocumentCount, StringFormat='{}{0} IP'}" FontSize="18" FontWeight="Bold" Foreground="#38BDF8" />
+                    <TextBlock Text="{Binding FindingsCount, StringFormat='Temuan: {0}'}" FontSize="11" Foreground="#10B981" FontWeight="Medium" />
                   </StackPanel>
                 </Border>
               </DataTemplate>
